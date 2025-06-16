@@ -1,19 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const sequelize = require('./config/db');
 
 const app = express();
 
-// Middlewares
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Routes Placeholder
 app.get('/', (req, res) => {
-  res.send('FPTU-PRM392-BE running...');
+  res.send('✅ FPTU-PRM392-BE is running...');
 });
 
+// Uncomment and add these when you implement them
 // const authRoutes = require('./routes/authRoutes');
 // const productRoutes = require('./routes/productRoutes');
 // const cartRoutes = require('./routes/cartRoutes');
@@ -22,18 +22,32 @@ app.get('/', (req, res) => {
 // app.use('/api/products', productRoutes);
 // app.use('/api/cart', cartRoutes);
 
-// // Error handling middleware
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).send('Something broke!');
-// });
+// Load Sequelize and Models
+const db = require('./models');
 
-// DB connection
-sequelize.authenticate()
-  .then(() => console.log('Database connected'))
-  .catch(err => console.log('Error:', err));
+// Connect to DB and sync models
+db.sequelize.authenticate()
+  .then(() => {
+    console.log('✅ Database connected');
 
+    // Sync models (use alter: true for dev, force: true only when recreating tables)
+    return db.sequelize.sync({ alter: true });
+  })
+  .then(() => {
+    console.log('✅ Models synced with DB');
+  })
+  .catch((err) => {
+    console.error('❌ Database error:', err);
+  });
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('❌ Something broke!');
+});
+
+// Start server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`🚀 Server started on port ${PORT}`);
 });
