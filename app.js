@@ -14,11 +14,11 @@ app.get('/', (req, res) => {
 });
 
 // Uncomment and add these when you implement them
-// const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/auth.routes');
 // const productRoutes = require('./routes/productRoutes');
 // const cartRoutes = require('./routes/cartRoutes');
 
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 // app.use('/api/products', productRoutes);
 // app.use('/api/cart', cartRoutes);
 
