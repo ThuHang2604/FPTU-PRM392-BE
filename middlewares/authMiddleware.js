@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const authMiddleware = (req, res, next) => {
-  // Lấy token từ header
+  // Get token from header
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -12,10 +12,10 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    // Xác minh token
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Gán thông tin user vào req để dùng ở các controller
-    next(); // Cho phép đi tiếp vào route
+    req.user = decoded; 
+    next(); 
   } catch (err) {
     res.status(403).json({ message: 'Invalid or expired token' });
   }
