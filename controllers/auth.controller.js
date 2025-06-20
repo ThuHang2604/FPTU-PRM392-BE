@@ -7,15 +7,15 @@ exports.register = async (req, res) => {
   try {
     const { username, password, email, phoneNumber, address } = req.body;
 
-    // Kiểm tra username đã tồn tại chưa
+    // Check if username already exists
     const existingUser = await User.findOne({ where: { Username: username } });
     if (existingUser) return res.status(400).json({ message: 'Username already exists' });
 
-    // Mã hóa mật khẩu
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Tạo người dùng
+    // Create user
     const user = await User.create({
       Username: username,
       PasswordHash: hashedPassword,
@@ -30,19 +30,20 @@ exports.register = async (req, res) => {
   }
 };
 
+// Login user
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Tìm người dùng
+    // Find user
     const user = await User.findOne({ where: { Username: username } });
     if (!user) return res.status(401).json({ message: 'Invalid username or password' });
 
-    // So sánh mật khẩu
+    // Compare passwords
     const isMatch = await bcrypt.compare(password, user.PasswordHash);
     if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
 
-    // Tạo token
+    // Generate token
     const token = jwt.sign(
       { userId: user.UserID, username: user.Username, role: user.Role },
       process.env.JWT_SECRET,

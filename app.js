@@ -13,13 +13,12 @@ app.get('/', (req, res) => {
   res.send('✅ FPTU-PRM392-BE is running...');
 });
 
-// Uncomment and add these when you implement them
 const authRoutes = require('./routes/auth.routes');
-// const productRoutes = require('./routes/productRoutes');
+const productRoutes = require('./routes/product.routes');
 // const cartRoutes = require('./routes/cartRoutes');
 
 app.use('/api/auth', authRoutes);
-// app.use('/api/products', productRoutes);
+app.use('/api/products', productRoutes);
 // app.use('/api/cart', cartRoutes);
 
 // Load Sequelize and Models
