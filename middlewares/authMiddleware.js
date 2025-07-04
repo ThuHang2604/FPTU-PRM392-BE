@@ -14,11 +14,16 @@ const authMiddleware = (req, res, next) => {
   try {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; 
-    next(); 
+    req.user = decoded;
+    next();
   } catch (err) {
     res.status(403).json({ message: 'Invalid or expired token' });
   }
 };
 
 module.exports = authMiddleware;
+
+// Verify user
+//const authMiddleware = require('./middlewares/authMiddleware');
+
+//router.get('/cart', authMiddleware, cartController.getCart);
