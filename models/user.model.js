@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     Address: {
       type: DataTypes.TEXT,
     },
+    FcmToken: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     Role: {
       type: DataTypes.ENUM('customer', 'admin'),
       defaultValue: 'customer',

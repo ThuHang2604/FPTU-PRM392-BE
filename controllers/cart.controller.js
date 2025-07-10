@@ -1,4 +1,6 @@
 const { Cart, CartItem, Product } = require('../models');
+const admin = require('../config/firebaseService');
+const { User } = require('../models');
 
 exports.addToCart = async (req, res) => {
     const userId = req.user.userId;
@@ -34,6 +36,29 @@ exports.addToCart = async (req, res) => {
         const total = allItems.reduce((sum, i) => sum + i.Quantity * i.Price, 0);
         cart.TotalPrice = total;
         await cart.save();
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            console.warn(`[FCM] User with ID: ${userId} can not be found`);
+        } else if (!user.FcmToken) {
+            console.warn(`[FCM] User ${user.Username} not have FcmToken`);
+        } else {
+            try {
+                const message = {
+                    token: user.FcmToken,
+                    notification: {
+                        title: '🛒 Giỏ hàng',
+                        body: `Bạn vừa thêm "${product.ProductName}" vào giỏ hàng`,
+                    },
+                };
+
+                const response = await admin.messaging().send(message);
+                console.log(`[FCM] Send notification to user successfully ${user.Username}:`, response);
+            } catch (fcmError) {
+                console.error(`[FCM] Send notification to user fail ${user.Username}:`, fcmError.message || fcmError);
+            }
+        }
 
         res.status(200).json({ message: 'Added to cart successfully' });
     } catch (err) {

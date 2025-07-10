@@ -55,3 +55,16 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Internal server error', error });
   }
 };
+
+//Send FCM token
+exports.updateFcmToken = async (req, res) => {
+  const userId = req.user.userId;
+  const { token } = req.body;
+
+  try {
+    await User.update({ FcmToken: token }, { where: { UserID: userId } });
+    res.json({ message: 'FCM token updated' });
+  } catch (err) {
+    res.status(500).json({ message: 'Update token failed', error: err });
+  }
+};
