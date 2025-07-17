@@ -6,8 +6,4 @@ const environment = process.env.PAYPAL_MODE === 'live'
 
 const client = new paypal.core.PayPalHttpClient(environment);
 
-console.log("🛠 PAYPAL_CLIENT_ID =", process.env.PAYPAL_CLIENT_ID);
-console.log("🛠 PAYPAL_CLIENT_SECRET =", process.env.PAYPAL_CLIENT_SECRET);
-console.log("🛠 PAYPAL_MODE =", process.env.PAYPAL_MODE);
-
 module.exports = { paypal, client };

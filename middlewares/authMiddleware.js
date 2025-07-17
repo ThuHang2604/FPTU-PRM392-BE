@@ -23,7 +23,3 @@ const authMiddleware = (req, res, next) => {
 
 module.exports = authMiddleware;
 
-// Verify user
-//const authMiddleware = require('./middlewares/authMiddleware');
-
-//router.get('/cart', authMiddleware, cartController.getCart);
