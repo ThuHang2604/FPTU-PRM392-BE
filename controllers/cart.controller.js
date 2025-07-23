@@ -55,6 +55,10 @@ exports.addToCart = async (req, res) => {
 
                 const response = await admin.messaging().send(message);
                 console.log(`[FCM] Send notification to user successfully ${user.Username}:`, response);
+                await Notification.create({
+                    UserID: userId,
+                    Message: `Bạn vừa thêm "${product.ProductName}" vào giỏ hàng`,
+                });
             } catch (fcmError) {
                 console.error(`[FCM] Send notification to user fail ${user.Username}:`, fcmError.message || fcmError);
             }
