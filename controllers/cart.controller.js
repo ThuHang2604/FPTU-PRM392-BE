@@ -137,3 +137,22 @@ exports.updateCartItem = async (req, res) => {
         res.status(500).json({ error: 'Failed to update item' });
     }
 };
+exports.clearCart = async (req, res) => {
+    const userId = req.user.userId;
+
+    try {
+        const cart = await Cart.findOne({ where: { UserID: userId } });
+        if (!cart) return res.status(404).json({ message: 'Cart not found' });
+
+        await CartItem.destroy({ where: { CartID: cart.CartID } });
+
+        cart.TotalPrice = 0;
+        await cart.save();
+
+        res.json({ message: 'Cart cleared successfully' });
+    } catch (err) {
+        console.error('[Clear Cart Error]', err);
+        res.status(500).json({ error: 'Failed to clear cart' });
+    }
+};
+
